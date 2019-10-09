@@ -7,7 +7,7 @@ import DegreeToggle from './DegreeToggle';
 const API_KEY = '2a55d5ed42d7d8c33521dbfc6b886e75';
  class WeekContainer extends Component{
      state = {
-        city : 'Kyiv',
+         city: 'Kyiv',
         
          fullData: [],
          dailyData: [],
