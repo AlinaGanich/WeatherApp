@@ -1,7 +1,7 @@
 import React from 'react';
 var moment = require('moment');
 
- const DayCard = ({reading, degreeType}) =>{
+ const DayCard = ({reading, degreeType, city}) =>{
         let newDate = new Date();
         const weekday = reading.dt *1000;
         newDate.setTime(weekday);
