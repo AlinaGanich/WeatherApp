@@ -9,7 +9,9 @@ const Form = ({city, getWeather}) => {
                
                 <button>Get Weather</button>
                 
+                
             </form>
+
 
         </div>
     );
