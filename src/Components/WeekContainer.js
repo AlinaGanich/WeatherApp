@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import DayCard from './DayCard';
 import DegreeToggle from './DegreeToggle';
 import Form from './Form';
+import SelectedCities from './SelectedCities';
 
 
-import OneDayCard from './OneDay';
+
 import {BrowserRouter, Route, Link} from 'react-router-dom'
 
 
@@ -18,8 +19,7 @@ const API_KEY = '2a55d5ed42d7d8c33521dbfc6b886e75';
          dailyData: [],
          oneDayData: [],
          degreeType: "metric",
-         city: undefined,
-         country: undefined,
+         city: 'Kiev',
          error: ''
          
      }
@@ -31,26 +31,13 @@ const API_KEY = '2a55d5ed42d7d8c33521dbfc6b886e75';
           degreeType: event.target.value
         })
       }
-    //   getWeather = (e)=>{
-    //     e.preventDefault();
-    //     console.log('weather', e.target.elements.city.value)
-    //     const city =  e.target.elements.city.value;
+      getWeather= (e)=>{
+        e.preventDefault();
+        console.log('weather', e.target.elements.city.value)
+        const city =  e.target.elements.city.value;
       
-    //   this.setState({
-    //       city: city,
-    //   }, () => console.log(this.state))
-      
-    // }
-     
-
-
-     getWeather  = (e) =>{
-         e.preventDefault();
-         console.log('weather', e.target.elements.city.value)
-         const city = e.target.elements.city.value;
-         const country = e.target.elements.country.value;
         const weatherURL = 
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&lang=eng&units=metric&APPID=${API_KEY}`;
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&lang=eng&units=metric&APPID=${API_KEY}`;
         console.log(weatherURL);
         fetch(weatherURL)
             .then(res=>res.json())
@@ -60,24 +47,83 @@ const API_KEY = '2a55d5ed42d7d8c33521dbfc6b886e75';
              
                 const oneDay = data.list.slice(0, 1).filter(reading => reading.dt_txt);
                
+                   
                     this.setState({
                         city: city,
-                        country: country,
                         fullData: fullData,
                         dailyData: dailyData,
                         oneDayData: oneDay,
                         error: ''
                     
                     }, () => console.log('getweather', this.state))
-            })
-     }
+                })
+      
+    }
+    getSelected = (e)=>{
+   
+        e.preventDefault();
+        console.log('selected', e.target.value)
+        const city =  e.target.value;
+      
+        const weatherURL = 
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&lang=eng&units=metric&APPID=${API_KEY}`;
+        console.log(weatherURL);
+        fetch(weatherURL)
+            .then(res=>res.json())
+            .then(data => {
+                const fullData = data.list;
+                const dailyData = data.list.filter(reading => reading.dt_txt.includes("18:00:00"));
+             
+                const oneDay = data.list.slice(0, 1).filter(reading => reading.dt_txt);
+               
+                   
+                    this.setState({
+                        city: city,
+                        fullData: fullData,
+                        dailyData: dailyData,
+                        oneDayData: oneDay,
+                        error: ''
+                    
+                    }, () => console.log('getweather', this.state))
+                })
+      
+    }
+
+
+    // componentDidMount() {
+  
+    //     const city = this.state.city;
+    //    console.log('city', city)
+
+    //     const weatherURL = 
+    //     `https://api.openweathermap.org/data/2.5/forecast?q=${city}&lang=eng&units=metric&APPID=${API_KEY}`;
+    //     console.log(weatherURL);
+    //     fetch(weatherURL)
+    //         .then(res=>res.json())
+    //         .then(data => {
+    //             const fullData = data.list;
+    //             const dailyData = data.list.filter(reading => reading.dt_txt.includes("18:00:00"));
+             
+    //             const oneDay = data.list.slice(0, 1).filter(reading => reading.dt_txt);
+               
+                   
+    //                 this.setState({
+    //                     city: city,
+    //                     fullData: fullData,
+    //                     dailyData: dailyData,
+    //                     oneDayData: oneDay,
+    //                     error: ''
+                    
+    //                 }, () => console.log('getweather', this.state))
+    //             })
+    //  }
+
      
  
 
      
-     formatDayCards = (e) =>{
+     formatDayCards = () =>{
         
-         console.log('e', e )
             return this.state.dailyData.map((read, index)=> <DayCard read={read} degreeType={this.state.degreeType} key={index} city={this.state.city}/>)
      }
      oneDay = () => {
@@ -94,6 +140,7 @@ const API_KEY = '2a55d5ed42d7d8c33521dbfc6b886e75';
                     <h3>{this.state.city}</h3>
                     <Form city={this.state.city} getWeather={this.getWeather} />
                     <DegreeToggle degreeType={this.state.degreeType} updateDegreeType={this.updateDegreeType}/>
+                    <SelectedCities city={this.state.city} getSelected={this.getSelected}/>
        
               
                     <button><Link to="/one">For One Day</Link></button>
